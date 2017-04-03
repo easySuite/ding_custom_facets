@@ -14,6 +14,7 @@ An unlimited number of groups can be added and rendered.
 - On "Manage custom facet groups" page click on group name you've just created
 - On Group's page you should see term table with "Label" and "CQL query" (See example below) fields where you have to fill your data click "Save" button.
 - Go to "Ting Search" pane and add "Custom facet groups + terms" pane from "Ding!" group to desired region.
+- On the pane settings form check group/groups which should be shown.
 
 ####Example
 For example create a group called "Various" and add 2 terms:
