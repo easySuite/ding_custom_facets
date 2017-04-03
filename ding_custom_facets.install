@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Creating database tables related to this module.
+ */
+
+/**
+ * Default schema for module functionality.
+ */
+function ding_custom_facets_schema() {
+  $schema['ding_custom_facets_groups'] = array(
+    'description' => 'The base table for custom facets groups.',
+    'fields' => array(
+      'gid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('gid'),
+  );
+
+  $schema['ding_custom_facets_terms'] = array(
+    'description' => 'The base table for custom facets groups terms.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'gid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'label' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'term' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'foreign keys' => array(
+      'node_author' => array(
+        'table' => 'ding_custom_facets_groups',
+        'columns' => array('gid' => 'gid'),
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+}

@@ -1,0 +1,6 @@
+name = Ding Custom Facet Groups
+description = Create custom facet groups to be displayed on search page.
+core = 7.x
+package = Ding!
+stylesheets[all][] = css/ding_custom_facets.css
+scripts[] = js/ding_custom_facets.js
