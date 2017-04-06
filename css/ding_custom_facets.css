@@ -1,3 +1,17 @@
+/**
+ * Mixins
+ *
+ * @author magnify
+ */
+/* Breakpoints
+   ========================================================================== */
+/* Media query
+   ========================================================================== */
+/* Breakpoints
+   ========================================================================== */
+.pane-ding-custom-facets span.fieldset-legend {
+  color: #7c7c7c;
+}
 .pane-ding-custom-facets a:link {
   text-decoration: none;
 }
@@ -14,4 +28,19 @@
   vertical-align: baseline;
   height: 16px;
   width: 16px;
+}
+
+@media only screen and (max-width: 768px) {
+  .secondary-content .pane-ding-custom-facets {
+    display: none;
+  }
+}
+
+.primary-content .pane-ding-custom-facets {
+  display: none;
+}
+@media only screen and (max-width: 768px) {
+  .primary-content .pane-ding-custom-facets {
+    display: block;
+  }
 }

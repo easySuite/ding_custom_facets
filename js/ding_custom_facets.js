@@ -16,8 +16,9 @@
             Drupal.TingSearchOverlay();
           }
         });
+
+        $( ".primary-content .pane-ding-custom-facets").insertAfter("fieldset#edit-backends--2");
       });
     }
   };
-
 })(jQuery);
