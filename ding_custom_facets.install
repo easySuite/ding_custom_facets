@@ -65,3 +65,115 @@ function ding_custom_facets_schema() {
 
   return $schema;
 }
+
+/**
+ * Implements hook_install().
+ */
+function ding_custom_facets_install() {
+  ding_custom_facets_add_panes();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ding_custom_facets_uninstall() {
+  ding_custom_facets_remove_panes();
+}
+
+/**
+ * Helper function for adding pane to specific pages.
+ */
+function ding_custom_facets_add_panes() {
+  $settings = array(
+    array(
+      'task' => page_manager_get_task('search-ting_search'),
+      'name' => 'search_ting_search_panel_context',
+      'subtask' => '',
+      'position' => 1,
+      'region' => 'left_sidebar',
+      'pid' => 'new-18a54ed2-3e2a-4e0b-b811-c5bee5cec9c8',
+      'uuid' => '18a54ed2-3e2a-4e0b-b811-c5bee5cec9c8',
+    ),
+    array(
+      'task' => page_manager_get_task('search-ting_search'),
+      'name' => 'search_ting_search_panel_context',
+      'subtask' => '',
+      'position' => 1,
+      'region' => 'main_content',
+      'pid' => 'new-475857e7-8dd3-4967-9f97-d1e8f6842b28',
+      'uuid' => '475857e7-8dd3-4967-9f97-d1e8f6842b28',
+    ),
+  );
+
+  ctools_include('plugins');
+  ctools_get_plugins('page_manager', 'task_handlers', 'panel_context');
+  foreach ($settings as $setting) {
+    $handler = page_manager_load_task_handler($setting['task'], $setting['subtask'], $setting['name']);
+    $display = panels_panel_context_get_display($handler);
+
+    $pane = new stdClass();
+    $pane->pid = $setting['pid'];
+    $pane->panel = $setting['region'];
+    $pane->type = 'ding_custom_facets';
+    $pane->subtype = 'ding_custom_facets';
+    $pane->shown = TRUE;
+    $pane->access = array();
+    $pane->configuration = array();
+    $pane->cache = array();
+    $pane->style = array(
+      'settings' => NULL,
+    );
+    $pane->css = array();
+    $pane->extras = array();
+    $pane->position = $setting['position'];
+    $pane->locks = array();
+    $pane->uuid = $setting['uuid'];
+    $display->content[$setting['pid']] = $pane;
+    $original = $display->panels[$setting['region']];
+    array_splice($original, $setting['position'], 0, $setting['pid']);
+    $display->panels[$setting['region']] = $original;
+    $display->hide_title = PANELS_TITLE_PANE;
+    $display->title_pane = '0';
+    $handler->conf['display'] = $display;
+    page_manager_save_task_handler($handler);
+  }
+}
+
+/**
+ * Helper function for removing pane to specific pages.
+ */
+function ding_custom_facets_remove_panes() {
+  $settings = array(
+    array(
+      'task' => page_manager_get_task('search-ting_search'),
+      'name' => 'search_ting_search_panel_context',
+      'subtask' => '',
+      'position' => 1,
+      'region' => 'left_sidebar',
+      'pid' => 'new-18a54ed2-3e2a-4e0b-b811-c5bee5cec9c8',
+      'uuid' => '18a54ed2-3e2a-4e0b-b811-c5bee5cec9c8',
+    ),
+    array(
+      'task' => page_manager_get_task('search-ting_search'),
+      'name' => 'search_ting_search_panel_context',
+      'subtask' => '',
+      'position' => 1,
+      'region' => 'main_content',
+      'pid' => 'new-475857e7-8dd3-4967-9f97-d1e8f6842b28',
+      'uuid' => '475857e7-8dd3-4967-9f97-d1e8f6842b28',
+    ),
+  );
+
+  ctools_include('plugins');
+  ctools_get_plugins('page_manager', 'task_handlers', 'panel_context');
+  foreach ($settings as $setting) {
+    $handler = page_manager_load_task_handler($setting['task'], $setting['subtask'], $setting['name']);
+    $display = panels_panel_context_get_display($handler);
+    $display->content = array_filter($display->content, function ($i) {
+      return $i->type != 'ding_custom_facets';
+    });
+    unset($display->panels[$setting['region']][$setting['position']]);
+    $handler->conf['display'] = $display;
+    page_manager_save_task_handler($handler);
+  }
+}

@@ -54,6 +54,10 @@ function ding_custom_facets_settings_submit($form, &$form_state) {
  * Pane rendering function.
  */
 function ding_custom_facets_render($subtype, $conf, $args, $contexts) {
+  if (empty($conf)) {
+    return;
+  }
+
   $groups = array_filter($conf['displayed_groups']);
 
   $output = '';
