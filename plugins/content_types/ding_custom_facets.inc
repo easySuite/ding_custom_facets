@@ -62,7 +62,7 @@ function ding_custom_facets_render($subtype, $conf, $args, $contexts) {
 
   $output = '';
   foreach ($groups as $group) {
-    $object = db_query('SELECT gid, name FROM {ding_custom_facets_groups} WHERE gid = :gid', array(':gid' => $group))->fetchObject();
+    $object = db_query('SELECT * FROM {ding_custom_facets_groups} WHERE gid = :gid', array(':gid' => $group))->fetchObject();
 
     $terms = db_select('ding_custom_facets_terms', 'terms')
       ->fields('terms')
