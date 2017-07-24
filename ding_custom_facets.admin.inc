@@ -75,7 +75,7 @@ function ding_custom_facets_item_form($form, &$form_state, $group) {
       'simple' => t('Simple'),
       'advanced' => t('Advanced'),
     ),
-    '#default_value' => (!empty($group->type)) ? $group->type : '',
+    '#default_value' => (!empty($group->type)) ? $group->type : 'simple',
     '#description' => t('Select type of widget which will be processed. Simple: extends current search and MUST be placed on search page. Advanced: provide already formed search request.'),
   );
 
@@ -107,7 +107,12 @@ function ding_custom_facets_item_form_submit($form, &$form_state) {
   }
   else {
     $gid = db_insert('ding_custom_facets_groups')
-      ->fields(array('name' => $form_state['input']['name']))
+      ->fields(
+        array(
+          'name' => $form_state['input']['name'],
+          'type' => $form_state['input']['type'],
+        )
+      )
       ->execute();
     $form_state['redirect'] = 'admin/config/ding/facet-groups/' . $gid;
   }
