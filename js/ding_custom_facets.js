@@ -3,7 +3,7 @@
 
   Drupal.behaviors.ding_custom_facets = {
     attach: function(context, settings) {
-      var checkboxes = $('#ding-custom-facets-render-form', context);
+      var checkboxes = $('.ding-custom-facets-form', context);
 
       $.each(checkboxes, function() {
         $('.form-type-checkbox').change(function(e) {
