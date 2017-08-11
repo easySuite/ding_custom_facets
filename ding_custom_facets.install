@@ -23,6 +23,12 @@ function ding_custom_facets_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'type' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
     ),
     'primary key' => array('gid'),
   );
@@ -176,4 +182,18 @@ function ding_custom_facets_remove_panes() {
     $handler->conf['display'] = $display;
     page_manager_save_task_handler($handler);
   }
+}
+
+/**
+ * Adding new column "type" in ding_custom_facets_groups.
+ */
+function ding_custom_facets_update_7001() {
+  $type_field = array(
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => '',
+  );
+
+  db_add_field('ding_custom_facets_groups', 'type', $type_field);
 }

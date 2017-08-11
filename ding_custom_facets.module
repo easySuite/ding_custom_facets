@@ -92,7 +92,7 @@ function ding_custom_facets_ctools_plugin_directory($owner, $plugin_type) {
  * Requesting group object form database.
  */
 function group_load($gid) {
-  return db_query('SELECT gid, name FROM {ding_custom_facets_groups} WHERE gid = :gid', array(':gid' => $gid))->fetchObject();
+  return db_query('SELECT * FROM {ding_custom_facets_groups} WHERE gid = :gid', array(':gid' => $gid))->fetchObject();
 }
 
 /**
@@ -116,6 +116,10 @@ function ding_custom_facets_render_form($form, &$form_state, $group, $terms) {
   $request_uri = urldecode(request_uri());
   $qp = drupal_get_query_parameters();
 
+  $form['#attributes'] = array(
+    'data-form-type' => $group->type,
+    'class' => array('ding-custom-facets-form'),
+  );
   // Creating fieldset for a group.
   $form['facet_groups_fieldset'] = array(
     '#type' => 'fieldset',
@@ -124,27 +128,44 @@ function ding_custom_facets_render_form($form, &$form_state, $group, $terms) {
 
   foreach ($terms as $term) {
     $checked = FALSE;
-    $url = $path . ' ' . $term->term;
 
-    $link = l($term->label, $url);
+    switch ($group->type) {
+      case 'simple':
+        $url = $path . ' ' . $term->term;
 
-    if ($qp) {
-      $link = l($term->label, $url, array('query' => array($qp)));
+        $link = l($term->label, $url);
+
+        if ($qp) {
+          $link = l($term->label, $url, array('query' => array($qp)));
+        }
+
+        if (strpos($request_uri, $term->term) != FALSE) {
+          // Check the selected option checkbox.
+          $checked = TRUE;
+
+          // Change link for unchecking operation.
+          $param = str_replace($term->term, '', $path);
+          $url = trim($param);
+          $link = l($term->label, $url);
+
+          if ($qp) {
+            $link = l($term->label, $url, array('query' => array($qp)));
+          }
+        }
+        break;
+
+      case 'advanced':
+        $url = 'search/ting/' . $term->term;
+        $link = l($term->label, $url);
+        if (strpos($request_uri, $term->term) != FALSE) {
+          $checked = TRUE;
+          $param = str_replace($term->term, '', $path);
+          $url = trim($param);
+          $link = l($term->label, $url);
+        }
+        break;
     }
 
-    if (strpos($request_uri, $term->term) != FALSE) {
-      // Check the selected option checkbox.
-      $checked = TRUE;
-
-      // Change link for unchecking operation.
-      $param = str_replace($term->term, '', $path);
-      $url = trim($param);
-      $link = l($term->label, $url);
-
-      if ($qp) {
-        $link = l($term->label, $url, array('query' => array($qp)));
-      }
-    }
 
     // Render checkbox field.
     $form['facet_groups_fieldset'][$term->id] = array(
