@@ -2,7 +2,7 @@
   "use strict";
 
   Drupal.behaviors.ding_custom_facets = {
-    attach: function(context, settings) {
+    attach: function(context) {
       var checkboxes = $('.ding-custom-facets-form', context);
 
       $.each(checkboxes, function() {
@@ -11,7 +11,7 @@
           window.location = $(e.target).parent().find('a').attr('href');
         });
 
-        $('.form-type-checkbox a').click(function(e) {
+        $('.form-type-checkbox a').click(function() {
           if ($(this).not('[target="_blank"]').length) {
             Drupal.TingSearchOverlay();
           }

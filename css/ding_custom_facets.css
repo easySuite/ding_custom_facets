@@ -9,18 +9,6 @@
    ========================================================================== */
 /* Breakpoints
    ========================================================================== */
-.pane-ding-custom-facets span.fieldset-legend {
-  color: #7c7c7c;
-}
-.pane-ding-custom-facets a:link {
-  text-decoration: none;
-}
-.pane-ding-custom-facets a:visited {
-  color: #00b7e7;
-}
-.pane-ding-custom-facets a:hover {
-  color: #006681;
-}
 .pane-ding-custom-facets input[type="checkbox"] {
   float: left;
   margin-top: 4px;
