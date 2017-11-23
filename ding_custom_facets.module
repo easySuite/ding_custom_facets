@@ -107,15 +107,12 @@ function ding_custom_facets_theme($existing, $type, $theme, $path) {
     'ding_custom_facets_facet_element' => array(
       'render element' => 'element',
     ),
-
     'ding_custom_facets_checkboxes' => array(
       'render element' => 'element',
     ),
-
     'ding_custom_facets' => array(
       'variables' => array(),
     ),
-
   );
 }
 
