@@ -1,22 +1,6 @@
 @import "_mixins";
 
 .pane-ding-custom-facets {
-  span.fieldset-legend {
-   color: #7c7c7c;
-  }
-
-  a:link {
-    text-decoration: none;
-  }
-
-  a:visited {
-    color: #00b7e7;
-  }
-
-  a:hover {
-    color: #006681;
-  }
-
   input[type="checkbox"] {
     float: left;
     margin-top: 4px;
