@@ -73,16 +73,16 @@ function ding_custom_facets_schema() {
 }
 
 /**
- * Implements hook_install().
+ * Implements hook_enable().
  */
-function ding_custom_facets_install() {
+function ding_custom_facets_enable() {
   ding_custom_facets_add_panes();
 }
 
 /**
- * Implements hook_uninstall().
+ * Implements hook_disable().
  */
-function ding_custom_facets_uninstall() {
+function ding_custom_facets_disable() {
   ding_custom_facets_remove_panes();
 }
 

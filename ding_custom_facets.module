@@ -104,14 +104,23 @@ function ding_custom_facets_theme($existing, $type, $theme, $path) {
       'render element' => 'form',
       'file' => 'ding_custom_facets.admin.inc',
     ),
+    'ding_custom_facets_facet_element' => array(
+      'render element' => 'element',
+    ),
+    'ding_custom_facets_checkboxes' => array(
+      'render element' => 'element',
+    ),
+    'ding_custom_facets' => array(
+      'variables' => array(),
+    ),
   );
 }
-
 
 /**
  * Implements hook_form().
  */
 function ding_custom_facets_render_form($form, &$form_state, $group, $terms) {
+  global $base_root;
   $path = current_path();
   $request_uri = urldecode(request_uri());
   $qp = drupal_get_query_parameters();
@@ -126,53 +135,96 @@ function ding_custom_facets_render_form($form, &$form_state, $group, $terms) {
     '#title' => $group->name,
   );
 
-  foreach ($terms as $term) {
-    $checked = FALSE;
+  if ($group->type == 'os_facets') {
+    $facets = variable_get('facets_wrapper', array());
+    $facet_identifier = $facets['identifier'];
 
-    switch ($group->type) {
-      case 'simple':
-        $url = $path . ' ' . $term->term;
+    foreach ($facets['facets'] as $terms) {
+      $facet_is_set = FALSE;
+      $facet = ' and facet.' . $facet_identifier . '=("' . implode('" or "', $terms['terms']) . '")';
 
-        $link = l($term->label, $url);
+      // When the custom facet is already clicked (or exists in URL).
+      if (mb_strpos($request_uri, $facet) !== FALSE) {
+        $facet_is_set = TRUE;
+        $matches = array();
+        preg_match('/(.*) and facet\.' . $facet_identifier . '=(.*)/', $request_uri, $matches);
 
-        if ($qp) {
-          $link = l($term->label, $url, array('query' => array($qp)));
-        }
+        $query = $matches[1];
+        $uri = $query;
+      }
+      // When there is a plain text query string.
+      else {
+        $query = arg(2);
+        $uri = $query . $facet;
+      }
 
-        if (strpos($request_uri, $term->term) != FALSE) {
-          // Check the selected option checkbox.
-          $checked = TRUE;
+      // Append query parameters (facets) if any.
+      if (!empty($uri_parts[1])) {
+        $uri .= '?' . $uri_parts[1];
+      }
 
-          // Change link for unchecking operation.
-          $param = str_replace($term->term, '', $path);
-          $url = trim($param);
+      if (!$facet_is_set) {
+        $uri = '/search/ting/' . $uri;
+      }
+
+      $link = l($terms['facet'], $base_root . $uri);
+      $checked = $facet_is_set;
+
+      $form['facet_groups_fieldset'][$terms['terms'][0]] = array(
+        '#type' => 'checkbox',
+        '#title' => $link,
+        '#default_value' => $checked,
+      );
+    }
+  }
+  else {
+    foreach ($terms as $term) {
+      $checked = FALSE;
+
+      switch ($group->type) {
+        case 'simple':
+          $url = $path . ' ' . $term->term;
+
           $link = l($term->label, $url);
 
           if ($qp) {
             $link = l($term->label, $url, array('query' => array($qp)));
           }
-        }
-        break;
 
-      case 'advanced':
-        $url = 'search/ting/' . $term->term;
-        $link = l($term->label, $url);
-        if (strpos($request_uri, $term->term) != FALSE) {
-          $checked = TRUE;
-          $param = str_replace($term->term, '', $path);
-          $url = trim($param);
+          if (strpos($request_uri, $term->term) != FALSE) {
+            // Check the selected option checkbox.
+            $checked = TRUE;
+
+            // Change link for un checking operation.
+            $param = str_replace($term->term, '', $path);
+            $url = trim($param);
+            $link = l($term->label, $url);
+
+            if ($qp) {
+              $link = l($term->label, $url, array('query' => array($qp)));
+            }
+          }
+          break;
+
+        case 'advanced':
+          $url = 'search/ting/' . $term->term;
           $link = l($term->label, $url);
-        }
-        break;
+          if (strpos($request_uri, $term->term) != FALSE) {
+            $checked = TRUE;
+            $param = str_replace($term->term, '', $path);
+            $url = trim($param);
+            $link = l($term->label, $url);
+          }
+          break;
+      }
+
+      // Render checkbox field.
+      $form['facet_groups_fieldset'][$term->id] = array(
+        '#type' => 'checkbox',
+        '#title' => $link,
+        '#default_value' => $checked,
+      );
     }
-
-
-    // Render checkbox field.
-    $form['facet_groups_fieldset'][$term->id] = array(
-      '#type' => 'checkbox',
-      '#title' => $link,
-      '#default_value' => $checked,
-    );
   }
 
   return $form;

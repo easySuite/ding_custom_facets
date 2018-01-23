@@ -16,7 +16,7 @@ An unlimited number of groups can be added and rendered.
 - Go to "Ting Search" pane and add "Custom facet groups + terms" pane from "Ding!" group to desired region.
 - On the pane settings form check group/groups which should be shown.
 
-####Example
+#### Example
 For example create a group called "Various" and add 2 terms:
 - Label: Can be accessed online (CQL query: "AND term.accessType=online")
 - Label: Not library items (CQL query: "NOT term.acSource=bibliotekskatalog")
